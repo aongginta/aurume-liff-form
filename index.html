@@ -1,56 +1,35 @@
 <!DOCTYPE html>
-
+<html>
 <head>
-  <title>กำลังเข้าสู่ Form</title>
-  <style>
-    .centerScreen {
-      margin-top: 20;
-      margin-right: auto;
-      margin-bottom: 20;
-      margin-left: auto;
-    }
-  </style>
-</head>
-
-<body style="background-color: powderblue;">
-  <div class="centerScreen">
-    <center>
-      <img src="https://drive.google.com/uc?id=1mEyShWSX9rPf4klIDeMTlHAOc4BsySFK" height="200px" , width="200px" />
-      <h1>
-        กำลังเข้าสู่ Google Form กรุณารอซักครู่
-      </h1>
-    </center>
-  </div>
-</body>
-<footer>
+  <meta charset="UTF-8">
+  <title>Redirecting...</title>
   <script src="https://static.line-scdn.net/liff/edge/2.1/sdk.js"></script>
+</head>
+<body>
+  <h1 style="text-align:center;">กำลังพาไปที่ฟอร์ม...</h1>
   <script>
-    /// Config Your LIFF ID Here
     const liffId = "1660731963-K7lzz7v4";
-    /// Config Your LIFF ID Here
-    liff.ready
-      .then(() => {
-        if (liff.isLoggedIn()) {
-          return liff.getProfile();
+    const googleFormUrl = "https://docs.google.com/forms/d/e/1FAIpQLSfNfyi4z15GPZhY9XGfDHFAI9RFcGvq1-VKbOAUcbi7zlqYkA/viewform";
+
+    async function startLiff() {
+      try {
+        await liff.init({ liffId: liffId });
+        if (!liff.isLoggedIn()) {
+          liff.login();
         } else {
-          liff.login({
-            redirectUri: "https://trilert.glitch.me/",
-          });
+          const profile = await liff.getProfile();
+          const finalUrl = `${googleFormUrl}?usp=pp_url` +
+            `&entry.1827155689=${encodeURIComponent(profile.userId)}` +
+            `&entry.2062207086=${encodeURIComponent(profile.displayName)}` +
+            `&entry.1203911146=${encodeURIComponent(profile.pictureUrl || '')}`;
+          
+          window.location.replace(finalUrl);
         }
-      })
-      .then((profile) => {
-        window.location.replace(
-          `https://docs.google.com/forms/d/e/1FAIpQLSfNfyi4z15GPZhY9XGfDHFAI9RFcGvq1-VKbOAUcbi7zlqYkA/viewform?usp=pp_url&entry.1827155689=${profile.userId}&entry.2062207086=${profile.displayName}&entry.1203911146=${profile.pictureUrl}`
-        );
-      });
-    liff.init(
-      {
-        liffId: liffId,
-      },
-      () => {},
-      (err) => {
-        window.alert(err);
+      } catch (err) {
+        alert("Error: " + err);
       }
-    );
+    }
+    startLiff();
   </script>
-</footer>
+</body>
+</html>
